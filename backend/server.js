@@ -1,6 +1,8 @@
 require("dotenv").config();
 
 const express = require("express");
+const applicationRoutes = require("./src/routes/applicationRoutes");
+const errorMiddleware = require("./src/middleware/errorMiddleware");
 
 const app = express();
 
@@ -13,6 +15,10 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+app.use("/api/applications", applicationRoutes);
+
+app.use(errorMiddleware);
 
 // GET - Test route
 app.get("/", (req, res) => {
@@ -28,15 +34,6 @@ app.post("/api/test", (req, res) => {
     res.json({
         message: "Data received successfully",
         data: req.body
-    });
-});
-
-// GET - Test req.params
-app.get("/api/applications/:id", (req, res) => {
-    console.log(req.params.id);
-
-    res.json({
-        applicationId: req.params.id
     });
 });
 
