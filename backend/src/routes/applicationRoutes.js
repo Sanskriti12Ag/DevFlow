@@ -1,16 +1,16 @@
 const express = require("express");
 
 const {
-    getApplicationById
+    getApplicationById,
+    getAllApplications,
+    createApplication
 } = require("../controllers/applicationController");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    res.json({
-        message: "Applications route working"
-    });
-});
+router.get("/", getAllApplications);
+
+router.post("/", createApplication);
 
 router.get("/:id", getApplicationById);
 
