@@ -9,7 +9,7 @@ const getApplicationById = async (req, res) => {
 };
 
 const getAllApplications = async (req, res) => {
-    const { status, sort } = req.query;
+    const { status, sort, search } = req.query;
 
     const page = Math.max(Number(req.query.page) || 1, 1);
     const limit = Math.min(
@@ -21,6 +21,13 @@ const getAllApplications = async (req, res) => {
 
     if (status) {
         filter.status = status;
+    }
+
+    if (search) {
+        filter.$or = [
+            { company: { $regex: search, $options: "i" } },
+            { role: { $regex: search, $options: "i" } }
+        ];
     }
 
     const applications = await applicationService.getAllApplications(
