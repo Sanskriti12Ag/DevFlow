@@ -3,7 +3,8 @@ const express = require("express");
 const {
     getApplicationById,
     getAllApplications,
-    createApplication
+    createApplication,
+    updateApplication
 } = require("../controllers/applicationController");
 
 const router = express.Router();
@@ -11,6 +12,8 @@ const router = express.Router();
 router.get("/", getAllApplications);
 
 router.post("/", createApplication);
+
+router.patch("/:id", updateApplication);
 
 router.get("/:id", getApplicationById);
 

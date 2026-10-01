@@ -22,8 +22,18 @@ const createApplication = async (req, res) => {
     res.status(201).json(application);
 };
 
+const updateApplication = async (req, res) => {
+    const application = await applicationService.updateApplication(
+        req.params.id,
+        req.body
+    );
+
+    res.json(application);
+};
+
 module.exports = {
     getApplicationById,
     getAllApplications,
-    createApplication
+    createApplication,
+    updateApplication
 };

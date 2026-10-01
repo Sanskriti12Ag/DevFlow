@@ -18,8 +18,22 @@ const createApplication = async (data) => {
     return application;
 };
 
+const updateApplication = async (id, data) => {
+    const application = await Application.findByIdAndUpdate(
+        id,
+        data,
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+
+    return application;
+};
+
 module.exports = {
     getApplicationById,
     getAllApplications,
-    createApplication
+    createApplication,
+    updateApplication
 };
