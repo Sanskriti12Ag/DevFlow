@@ -31,9 +31,21 @@ const updateApplication = async (req, res) => {
     res.json(application);
 };
 
+const deleteApplication = async (req, res) => {
+    const application = await applicationService.deleteApplication(
+        req.params.id
+    );
+
+    res.json({
+        message: "Application deleted successfully",
+        application
+    });
+};
+
 module.exports = {
     getApplicationById,
     getAllApplications,
     createApplication,
-    updateApplication
+    updateApplication,
+    deleteApplication
 };
