@@ -12,10 +12,24 @@ const getApplicationById = async (id) => {
     return application;
 };
 
-const getAllApplications = async () => {
-    const applications = await Application.find();
+const getAllApplications = async (filter = {}, page = 1, limit = 10) => {
+    const skip = (page - 1) * limit;
 
-    return applications;
+    const applications = await Application.find(filter)
+        .skip(skip)
+        .limit(limit);
+
+    const total = await Application.countDocuments(filter);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+        applications,
+        page,
+        limit,
+        total,
+        totalPages
+    };
 };
 
 const createApplication = async (data) => {

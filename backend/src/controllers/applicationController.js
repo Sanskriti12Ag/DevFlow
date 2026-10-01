@@ -9,7 +9,25 @@ const getApplicationById = async (req, res) => {
 };
 
 const getAllApplications = async (req, res) => {
-    const applications = await applicationService.getAllApplications();
+    const { status } = req.query;
+
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.min(
+    Math.max(Number(req.query.limit) || 10, 1),
+    100
+);
+
+    const filter = {};
+
+    if (status) {
+        filter.status = status;
+    }
+
+    const applications = await applicationService.getAllApplications(
+        filter,
+        page,
+        limit
+    );
 
     res.json(applications);
 };
