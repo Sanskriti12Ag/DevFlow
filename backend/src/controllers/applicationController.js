@@ -9,13 +9,13 @@ const getApplicationById = async (req, res) => {
 };
 
 const getAllApplications = async (req, res) => {
-    const { status } = req.query;
+    const { status, sort } = req.query;
 
     const page = Math.max(Number(req.query.page) || 1, 1);
     const limit = Math.min(
-    Math.max(Number(req.query.limit) || 10, 1),
-    100
-);
+        Math.max(Number(req.query.limit) || 10, 1),
+        100
+    );
 
     const filter = {};
 
@@ -26,7 +26,8 @@ const getAllApplications = async (req, res) => {
     const applications = await applicationService.getAllApplications(
         filter,
         page,
-        limit
+        limit,
+        sort
     );
 
     res.json(applications);

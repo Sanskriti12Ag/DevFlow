@@ -12,10 +12,18 @@ const getApplicationById = async (id) => {
     return application;
 };
 
-const getAllApplications = async (filter = {}, page = 1, limit = 10) => {
+const getAllApplications = async (
+    filter = {},
+    page = 1,
+    limit = 10,
+    sort = "newest"
+) => {
     const skip = (page - 1) * limit;
 
+    const sortOrder = sort === "oldest" ? 1 : -1;
+
     const applications = await Application.find(filter)
+        .sort({ createdAt: sortOrder })
         .skip(skip)
         .limit(limit);
 
