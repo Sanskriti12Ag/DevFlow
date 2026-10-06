@@ -40,6 +40,12 @@ const getAllApplications = async (req, res) => {
     res.json(applications);
 };
 
+const getApplicationStats = async (req, res) => {
+    const stats = await applicationService.getApplicationStats();
+
+    res.json(stats);
+};
+
 const createApplication = async (req, res) => {
     const application = await applicationService.createApplication(
         req.body
@@ -73,5 +79,6 @@ module.exports = {
     getAllApplications,
     createApplication,
     updateApplication,
-    deleteApplication
+    deleteApplication,
+    getApplicationStats
 };

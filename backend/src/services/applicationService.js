@@ -77,10 +77,24 @@ const deleteApplication = async (id) => {
     return application;
 };
 
+const getApplicationStats = async () => {
+    const stats = await Application.aggregate([
+        {
+            $group: {
+                _id: "$status",
+                count: { $sum: 1 }
+            }
+        }
+    ]);
+
+    return stats;
+};
+
 module.exports = {
     getApplicationById,
     getAllApplications,
     createApplication,
     updateApplication,
-    deleteApplication
+    deleteApplication,
+    getApplicationStats
 };

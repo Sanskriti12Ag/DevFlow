@@ -5,7 +5,8 @@ const {
     getAllApplications,
     createApplication,
     updateApplication,
-    deleteApplication
+    deleteApplication,
+    getApplicationStats
 } = require("../controllers/applicationController");
 
 const router = express.Router();
@@ -13,6 +14,8 @@ const router = express.Router();
 router.get("/", getAllApplications);
 
 router.post("/", createApplication);
+
+router.get("/stats", getApplicationStats);
 
 router.patch("/:id", updateApplication);
 
