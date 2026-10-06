@@ -87,7 +87,21 @@ const getApplicationStats = async () => {
         }
     ]);
 
-    return stats;
+    const result = {
+        total: 0,
+        Applied: 0,
+        Interview: 0,
+        Offer: 0,
+        Rejected: 0,
+        Withdrawn: 0
+    };
+
+    for (const stat of stats) {
+        result[stat._id] = stat.count;
+        result.total += stat.count;
+    }
+
+    return result;
 };
 
 module.exports = {
