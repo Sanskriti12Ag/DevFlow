@@ -27,7 +27,14 @@ const applicationSchema = new mongoose.Schema(
         "Withdrawn"
     ],
     default: "Applied"
+},
+
+        notes: {
+            type: String,
+            trim: true,
+            default: ""
 }
+
     },
     {
         timestamps: true
