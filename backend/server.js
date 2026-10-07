@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const connectDB = require("./src/config/db");
 const applicationRoutes = require("./src/routes/applicationRoutes");
+const authRoutes = require("./src/routes/authRoutes");
 const errorMiddleware = require("./src/middleware/errorMiddleware");
 
 const app = express();
@@ -18,6 +19,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+app.use("/api/auth", authRoutes);
 
 app.use("/api/applications", applicationRoutes);
 
