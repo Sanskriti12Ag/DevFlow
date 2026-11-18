@@ -1,40 +1,46 @@
+
 const mongoose = require("mongoose");
 
 const applicationSchema = new mongoose.Schema(
     {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
+
         company: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 1
-},
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 1
+        },
 
         role: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 1
-},
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 1
+        },
 
         status: {
-    type: String,
-    required: true,
-    enum: [
-        "Applied",
-        "Interview",
-        "Offer",
-        "Rejected",
-        "Withdrawn"
-    ],
-    default: "Applied"
-},
+            type: String,
+            required: true,
+            enum: [
+                "Applied",
+                "Interview",
+                "Offer",
+                "Rejected",
+                "Withdrawn"
+            ],
+            default: "Applied"
+        },
 
         notes: {
             type: String,
             trim: true,
             default: ""
-}
-
+        }
     },
     {
         timestamps: true

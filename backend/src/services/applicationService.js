@@ -1,7 +1,12 @@
+
+const mongoose = require("mongoose");
 const Application = require("../models/applicationModel");
 
-const getApplicationById = async (id) => {
-    const application = await Application.findById(id);
+const getApplicationById = async (id, userId) => {
+    const application = await Application.findOne({
+        _id: id,
+        user: userId
+    });
 
     if (!application) {
         const error = new Error("Application not found");
@@ -13,22 +18,27 @@ const getApplicationById = async (id) => {
 };
 
 const getAllApplications = async (
+    userId,
     filter = {},
     page = 1,
     limit = 10,
     sort = "newest"
 ) => {
     const skip = (page - 1) * limit;
-
     const sortOrder = sort === "oldest" ? 1 : -1;
 
-    const applications = await Application.find(filter)
+    // Always restrict queries to the logged-in user
+    const userFilter = {
+        ...filter,
+        user: userId
+    };
+
+    const applications = await Application.find(userFilter)
         .sort({ createdAt: sortOrder })
         .skip(skip)
         .limit(limit);
 
-    const total = await Application.countDocuments(filter);
-
+    const total = await Application.countDocuments(userFilter);
     const totalPages = Math.ceil(total / limit);
 
     return {
@@ -40,16 +50,25 @@ const getAllApplications = async (
     };
 };
 
-const createApplication = async (data) => {
-    const application = await Application.create(data);
+const createApplication = async (data, userId) => {
+    const application = await Application.create({
+        ...data,
+        user: userId
+    });
 
     return application;
 };
 
-const updateApplication = async (id, data) => {
-    const application = await Application.findByIdAndUpdate(
-        id,
-        data,
+const updateApplication = async (id, data, userId) => {
+    // Never allow clients to change application ownership
+    const { user, ...updateData } = data;
+
+    const application = await Application.findOneAndUpdate(
+        {
+            _id: id,
+            user: userId
+        },
+        updateData,
         {
             new: true,
             runValidators: true
@@ -65,8 +84,11 @@ const updateApplication = async (id, data) => {
     return application;
 };
 
-const deleteApplication = async (id) => {
-    const application = await Application.findByIdAndDelete(id);
+const deleteApplication = async (id, userId) => {
+    const application = await Application.findOneAndDelete({
+        _id: id,
+        user: userId
+    });
 
     if (!application) {
         const error = new Error("Application not found");
@@ -77,8 +99,17 @@ const deleteApplication = async (id) => {
     return application;
 };
 
-const getApplicationStats = async () => {
+
+const getApplicationStats = async (userId) => {
+    const objectId = new mongoose.Types.ObjectId(userId);
+
+   
     const stats = await Application.aggregate([
+        {
+            $match: {
+                user: objectId
+            }
+        },
         {
             $group: {
                 _id: "$status",
@@ -86,6 +117,8 @@ const getApplicationStats = async () => {
             }
         }
     ]);
+
+    
 
     const result = {
         total: 0,
@@ -103,6 +136,7 @@ const getApplicationStats = async () => {
 
     return result;
 };
+
 
 module.exports = {
     getApplicationById,

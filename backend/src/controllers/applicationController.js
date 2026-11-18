@@ -1,8 +1,10 @@
+
 const applicationService = require("../services/applicationService");
 
 const getApplicationById = async (req, res) => {
     const application = await applicationService.getApplicationById(
-        req.params.id
+        req.params.id,
+        req.user.id
     );
 
     res.json(application);
@@ -12,6 +14,7 @@ const getAllApplications = async (req, res) => {
     const { status, sort, search } = req.query;
 
     const page = Math.max(Number(req.query.page) || 1, 1);
+
     const limit = Math.min(
         Math.max(Number(req.query.limit) || 10, 1),
         100
@@ -31,6 +34,7 @@ const getAllApplications = async (req, res) => {
     }
 
     const applications = await applicationService.getAllApplications(
+        req.user.id,
         filter,
         page,
         limit,
@@ -41,14 +45,17 @@ const getAllApplications = async (req, res) => {
 };
 
 const getApplicationStats = async (req, res) => {
-    const stats = await applicationService.getApplicationStats();
+    const stats = await applicationService.getApplicationStats(
+        req.user.id
+    );
 
     res.json(stats);
 };
 
 const createApplication = async (req, res) => {
     const application = await applicationService.createApplication(
-        req.body
+        req.body,
+        req.user.id
     );
 
     res.status(201).json(application);
@@ -57,7 +64,8 @@ const createApplication = async (req, res) => {
 const updateApplication = async (req, res) => {
     const application = await applicationService.updateApplication(
         req.params.id,
-        req.body
+        req.body,
+        req.user.id
     );
 
     res.json(application);
@@ -65,7 +73,8 @@ const updateApplication = async (req, res) => {
 
 const deleteApplication = async (req, res) => {
     const application = await applicationService.deleteApplication(
-        req.params.id
+        req.params.id,
+        req.user.id
     );
 
     res.json({
