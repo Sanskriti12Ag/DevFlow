@@ -1,3 +1,4 @@
+
 const express = require("express");
 
 const {
@@ -9,7 +10,12 @@ const {
     getApplicationStats
 } = require("../controllers/applicationController");
 
+const authMiddleware = require("../middleware/authMiddleware");
+
 const router = express.Router();
+
+// Protect all application routes
+router.use(authMiddleware);
 
 router.get("/", getAllApplications);
 
